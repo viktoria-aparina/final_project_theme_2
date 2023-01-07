@@ -3,13 +3,10 @@ package org.pm.mobile.configuration.server;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.Range;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.pm.mobile.configuration.capabilities.TestDataReader;
-
-import static io.appium.java_client.service.local.flags.GeneralServerFlag.LOG_LEVEL;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,9 +14,10 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static io.appium.java_client.service.local.flags.GeneralServerFlag.LOG_LEVEL;
+@Log4j2
 public final class AppiumServerConfigurator {
 
-    private static final Logger LOG = LogManager.getRootLogger();
     private static final int ATTEMPTS = 40;
     private static final String IP_ADDRESS = TestDataReader.get().ipAddress();
     private static final ThreadLocal<AppiumDriverLocalService> THREAD_LOCAL_SERVICE = new ThreadLocal<>();
@@ -32,17 +30,17 @@ public final class AppiumServerConfigurator {
 
     public static AppiumDriverLocalService getService() {
         if (THREAD_LOCAL_SERVICE.get() == null) {
-            LOG.info("Appium server is null. Try to create one");
+            log.info("Appium server is null. Try to create one");
             createService();
         }
-        LOG.info("Requested appium server is present and has running status " + THREAD_LOCAL_SERVICE.get().isRunning());
+        log.info("Requested appium server is present and has running status " + THREAD_LOCAL_SERVICE.get().isRunning());
         return THREAD_LOCAL_SERVICE.get();
     }
 
     private static void createService() {
         DesiredCapabilities cap = new DesiredCapabilities();
         int port = findOpenPortOnAllLocalInterfaces();
-        LOG.info(port + " port for Appium. Try to build server");
+        log.info(port + " port for Appium. Try to build server");
         THREAD_LOCAL_SERVICE.set(new AppiumServiceBuilder()
                 .withIPAddress(IP_ADDRESS)
                 .usingPort(port)
@@ -53,11 +51,11 @@ public final class AppiumServerConfigurator {
                 .withArgument(LOG_LEVEL, "error")
                 .build());
         //Start the server with the builder
-        LOG.info("Try to start Appium server");
+        log.info("Try to start Appium server");
         Optional.ofNullable(THREAD_LOCAL_SERVICE.get()).ifPresent(AppiumDriverLocalService::start);
-        LOG.info(String.format("Appium server running status is {%s} after start command",
+        log.info(String.format("Appium server running status is {%s} after start command",
                 THREAD_LOCAL_SERVICE.get().isRunning()));
-        LOG.info("Appium server started on port " + port);
+        log.info("Appium server started on port " + port);
     }
 
     public static int findOpenPortOnAllLocalInterfaces() {
@@ -72,12 +70,12 @@ public final class AppiumServerConfigurator {
                     return socketPort;
                 }
             } catch (IOException e) {
-                LOG.error("Can not obtain new socket port. " + e.getMessage());
+                log.error("Can not obtain new socket port. " + e.getMessage());
                 if (socket != null) {
                     try {
                         socket.close();
                     } catch (IOException ioException) {
-                        LOG.error(ioException);
+                        log.error(ioException);
                     }
                 }
             }
@@ -87,10 +85,10 @@ public final class AppiumServerConfigurator {
 
     public static void stopServer() {
         Optional.ofNullable(THREAD_LOCAL_SERVICE.get()).ifPresent(AppiumDriverLocalService::stop);
-        LOG.info(String.format("Appium server running status is {%s} after stop command",
+        log.info(String.format("Appium server running status is {%s} after stop command",
                 THREAD_LOCAL_SERVICE.get().isRunning()));
         socketList.remove(THREAD_LOCAL_SERVICE.get().getUrl().getPort());
         THREAD_LOCAL_SERVICE.remove();
-        LOG.info("Appium server has been stopped");
+        log.info("Appium server has been stopped");
     }
 }
