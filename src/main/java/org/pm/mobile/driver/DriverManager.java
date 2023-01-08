@@ -27,32 +27,32 @@ public class DriverManager {
     private static final ConfigurationType CONFIGURATION_TYPE = ConfigurationType.getType(DEVICE_TYPE, RUN_TYPE);
     private static final ThreadLocal<AppiumDriver<MobileElement>> threadLocalDriver = new ThreadLocal<>();
 
-    public static void createDriver(String udid, String wda, String deviceName, String platformVersion) throws MalformedURLException {
-        AppiumDriver<MobileElement> driver = switch (CONFIGURATION_TYPE) {
-            case ANDROID_LOCAL -> new AndroidDriver<>(new URL("https://oauth-wladyslaw.permyakov-7bd90:*****0817@ondemand.us-west-1.saucelabs.com:443/wd/hub"),
-                    CapabilitiesConfigurator.getAndroidLocalCapabilities(udid, deviceName, platformVersion));
-            case IOS_LOCAL -> new IOSDriver<>(AppiumServerConfigurator.getService(),
-                    CapabilitiesConfigurator.getIosLocalCapabilities(deviceName, wda, udid));
-            default -> throw new IllegalStateException("Unexpected value: " + CONFIGURATION_TYPE);
-        };
-        driver = EventFiringWebDriverFactory.getEventFiringWebDriver(driver, new EventLogListener());
-        threadLocalDriver.set(driver);
-        log.info("Driver is created");
-        log.info("Device type is {}", DEVICE_TYPE);
-        log.info("Run type is {}", RUN_TYPE);
-    }
+//    public static void createDriver(String udid, String wda, String deviceName, String platformVersion) throws MalformedURLException {
+//        AppiumDriver<MobileElement> driver = switch (CONFIGURATION_TYPE) {
+//            case ANDROID_LOCAL -> new AndroidDriver<>(new URL("https://oauth-wladyslaw.permyakov-7bd90:*****0817@ondemand.us-west-1.saucelabs.com:443/wd/hub"),
+//                    CapabilitiesConfigurator.getAndroidLocalCapabilities(udid, deviceName, platformVersion));
+//            case IOS_LOCAL -> new IOSDriver<>(AppiumServerConfigurator.getService(),
+//                    CapabilitiesConfigurator.getIosLocalCapabilities(deviceName, wda, udid));
+//            default -> throw new IllegalStateException("Unexpected value: " + CONFIGURATION_TYPE);
+//        };
+//        driver = EventFiringWebDriverFactory.getEventFiringWebDriver(driver, new EventLogListener());
+//        threadLocalDriver.set(driver);
+//        log.info("Driver is created");
+//        log.info("Device type is {}", DEVICE_TYPE);
+//        log.info("Run type is {}", RUN_TYPE);
+//    }
 
-    public static AppiumDriver<MobileElement> getDriver() {
-        return threadLocalDriver.get();
-    }
-
-    public static void terminateDriver() {
-        Optional.ofNullable(getDriver()).ifPresent((AppiumDriver<MobileElement> driver) -> {
-            driver.quit();
-            threadLocalDriver.remove();
-            log.info("Driver is closed");
-        });
-    }
+//    public static AppiumDriver<MobileElement> getDriver() {
+//        return threadLocalDriver.get();
+//    }
+//
+//    public static void terminateDriver() {
+//        Optional.ofNullable(getDriver()).ifPresent((AppiumDriver<MobileElement> driver) -> {
+//            driver.quit();
+//            threadLocalDriver.remove();
+//            log.info("Driver is closed");
+//        });
+//    }
 
     public static void terminateAppium() {
         AppiumServerConfigurator.stopServer();

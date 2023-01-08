@@ -12,15 +12,15 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 public class BasePage {
 
-    protected BasePage() {
-        PageFactory.initElements(new AppiumFieldDecorator(DriverManager.getDriver()), this);
-    }
-
-    private static MobileElement waitForElementExplicitly(int waitValue, ExpectedCondition<?> isTrue) {
-        return (MobileElement) new WebDriverWait(DriverManager.getDriver(), waitValue).until(isTrue);
-    }
-
-    public MobileElement waitForExpectedElement(MobileElement mobileElement) {
-        return waitForElementExplicitly(TestDataReader.get().explicitWait(), visibilityOf(mobileElement));
-    }
+//    protected BasePage() {
+//        PageFactory.initElements(new AppiumFieldDecorator(DriverManager.getDriver()), this);
+//    }
+//
+//    private static MobileElement waitForElementExplicitly(int waitValue, ExpectedCondition<?> isTrue) {
+//        return (MobileElement) new WebDriverWait(DriverManager.getDriver(), waitValue).until(isTrue);
+//    }
+//
+//    public MobileElement waitForExpectedElement(MobileElement mobileElement) {
+//        return waitForElementExplicitly(TestDataReader.get().explicitWait(), visibilityOf(mobileElement));
+//    }
 }
