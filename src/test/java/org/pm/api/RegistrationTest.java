@@ -2,6 +2,7 @@ package org.pm.api;
 
 import static org.hamcrest.Matchers.notNullValue;
 
+import lombok.var;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.pm.api.model.AccessToken;
 import org.testng.Assert;

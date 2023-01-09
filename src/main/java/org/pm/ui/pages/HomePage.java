@@ -1,8 +1,11 @@
 package org.pm.ui.pages;
 
+import com.codeborne.selenide.Config;
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 
 import java.util.ArrayList;
@@ -38,7 +41,8 @@ public class HomePage extends BasePage {
     }
 
     public LoginPage clickOnLoginButton() {
-        $(xpath("//button[@data-id='header-login']")).click();
+        Configuration.timeout = 10000;
+        $(xpath("//button[@data-id='header-login']")).shouldBe(visible).click();
         log.info("Click on button \"Log in\" was successful");
         return new LoginPage();
     }
@@ -62,5 +66,15 @@ public class HomePage extends BasePage {
             result.add(Double.parseDouble(coefficients.get(number).getText()));
         }
         return result;
+    }
+
+    public HomePage clearBetslip() {
+        $(By.xpath("//div[@data-id='betslip-header-delete-button-icon']")).shouldBe(visible).click();
+        $(By.xpath("//span[text()='Yes']")).shouldBe(visible).click();
+        return this;
+    }
+
+    public void close() {
+        Selenide.closeWebDriver();
     }
 }
