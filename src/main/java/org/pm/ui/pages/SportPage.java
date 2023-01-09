@@ -28,6 +28,7 @@ public class SportPage extends BasePage {
                 .get(eventPositionInList)
                 .find(xpath(bet.getLocator())).shouldBe(visible)
                 .click();
+        log.info("The bet was choose successfully");
         $(xpath("//div[@data-id='betslip-outcome-block']")).shouldBe(visible);
         return new BetslipPage();
     }
