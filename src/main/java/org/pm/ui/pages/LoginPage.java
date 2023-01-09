@@ -11,7 +11,6 @@ import static org.openqa.selenium.By.xpath;
 
 @Log4j2
 public class LoginPage extends BasePage {
-
     @Override
     public boolean isPageOpened() {
         try {
