@@ -23,13 +23,21 @@ public class SportPage extends BasePage {
         }
     }
 
-    public BetslipPage selectEventAndOutcome(int eventPositionInList, Bet bet) {
+    public BetslipPage selectEventAndOutcome(int eventIndex, Bet bet) {
         $$(xpath("//div[@data-id='event-card-container-event']"))
-                .get(eventPositionInList)
+                .get(eventIndex)
                 .find(xpath(bet.getLocator())).shouldBe(visible)
                 .click();
-        log.info("The bet was choose successfully");
+        log.info("The bet was chosen successfully");
         $(xpath("//div[@data-id='betslip-outcome-block']")).shouldBe(visible);
         return new BetslipPage();
+    }
+
+    public double getOddFromOutcome(int eventIndex, Bet bet) {
+        String odd = $$(xpath("//div[@data-id='event-card-container-event']"))
+                        .get(eventIndex)
+                        .find(xpath(bet.getLocator())).shouldBe(visible)
+                        .find(xpath(".//div[@data-id=\"animated-odds-value\"]//span")).getText();
+        return Double.parseDouble(odd);
     }
 }
