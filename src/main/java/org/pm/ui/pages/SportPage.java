@@ -44,12 +44,4 @@ public class SportPage extends BasePage {
         $(xpath("//div[@data-id='betslip-outcome-block']")).shouldBe(visible);
         return coefficientsFromSportPage;
     }
-
-    public double getOddFromOutcome(int eventIndex, Bet bet) {
-        String odd = $$(xpath("//div[@data-id='event-card-container-event']"))
-                        .get(eventIndex)
-                        .find(xpath(bet.getLocator())).shouldBe(visible)
-                        .find(xpath(".//div[@data-id=\"animated-odds-value\"]//span")).getText();
-        return Double.parseDouble(odd);
-    }
 }
