@@ -1,4 +1,4 @@
-package org.pm.api.model;
+package api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginRequest {
-  private String login;
-  private String password;
+
+public class UpdatePasswordRequest {
+  private String oldPassword;
+  private String newPassword;
 }

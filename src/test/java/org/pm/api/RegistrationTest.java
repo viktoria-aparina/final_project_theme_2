@@ -1,31 +1,23 @@
 package org.pm.api;
 
-import static org.hamcrest.Matchers.notNullValue;
+import api.dto.UserRegistrationRequest;
+import api.dto.response.RegistrationResponse;
+import api.providers.UserRegistrationProvider;
+import org.apache.http.HttpStatus;
 
-import lombok.var;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.pm.api.model.AccessToken;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class RegistrationTest extends BaseTest {
+import static org.assertj.core.api.Assertions.*;
+
+public class RegistrationTest extends BaseTest{
+
 
   @Test
-  public void registrationWithValidDataTest() {
+  public void registrationTest() {
+    UserRegistrationRequest newUser = new UserRegistrationProvider().getNewUser();
 
-    String generatedString = RandomStringUtils.randomNumeric(3);
-    var phone = "+38011065" + generatedString;
-    var email = "test_" + generatedString + "@gmail.com";
+    RegistrationResponse actualResponse = registrationApiClient.postUser(newUser, HttpStatus.SC_OK);
 
-    var user = buildUserForRegistration(
-        formName, phone, email, password, defaultCurrency, selectedLanguage, isPlayerAgree);
-
-    var actualResponse = registrationController.registrationNewUser(user);
-
-    Assert.assertEquals(actualResponse.extract().statusCode(), 200);
-    actualResponse.body("token", notNullValue());
-
-    logger.info("User successfully registered with valid data. Registration token " + actualResponse
-        .extract().as(AccessToken.class).getToken());
+    assertThat(actualResponse.getToken()).as("Token in response is null").isNotNull();
   }
 }

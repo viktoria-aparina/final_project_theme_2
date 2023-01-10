@@ -1,4 +1,4 @@
-package org.pm.api.model;
+package api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 
-public class RegistrationRequest {
+public class UserRegistrationRequest {
   private String formName;
   private String phone;
   private String email;

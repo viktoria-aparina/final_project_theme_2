@@ -7,6 +7,9 @@ import org.pm.ui.pages.HomePage;
 import org.pm.ui.pages.SportPage;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BetslipTest extends BaseTest {
@@ -14,12 +17,33 @@ public class BetslipTest extends BaseTest {
     @Description("UI: Place a single bet using proposed bet amount")
     @Test(groups = "Aparina UI tests")
     public void addSingleBetFromProposedBetsTest() {
-        new HomePage().selectSport("soccer")
-                .selectEventAndOutcome(1, Bet.P1)
-                .chooseProposedAmountForBet()
-                .clickPlaceBetButtonOnBetslip();
-        /*assertThat(new BetslipPage().getAlert()).as("Single bet was created successfully! " +
-          "The text in alert is differ from expected").isEqualTo("Bet accepted");*/
+        new HomePage().selectSport("soccer");
+        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
+
+        ArrayList<Double> coefficientsFromSportPage = new SportPage().selectEventAndOutcome(Map.of(Bet.X, 2));
+        assertThat(new BetslipPage().getCoefficientsFromBetslip())
+                .as("Coefficients in betslip and sport page are different")
+                .isEqualTo(coefficientsFromSportPage);
+
+        new BetslipPage().chooseProposedAmountForBet().clickPlaceBetButtonOnBetslip();
+        assertThat(new BetslipPage().getSuccessAlert()).as("Single bet was created successfully! " +
+                "The text in alert is differ from expected").isEqualTo("Bet accepted");
+    }
+
+    @Description("UI: Removing all bets from the betslip using button \"Remove\"")
+    @Test(groups = "Aparina UI tests")
+    public void removeAllBetsFromBetslip() {
+        new HomePage().selectSport("soccer");
+        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
+
+        ArrayList<Double> coefficientsFromSportPage = new SportPage().selectEventAndOutcome(Map.of(Bet.P1, 4, Bet.P2, 3));
+        assertThat(new BetslipPage().getCoefficientsFromBetslip())
+                .as("Coefficients in betslip and sport page are different")
+                .isEqualTo(coefficientsFromSportPage);
+
+        new BetslipPage().clickRemoveButton().clickYesInNotificationMessage();
+        assertThat(new BetslipPage().getEmptyAlert()).as("All bets weren't removed from the betslip" +
+                "The text in alert is differ from expected").isEqualTo("Your betslip is empty");
     }
 
     @Description("C10.Filling the field \"Bet total\" with valid data")
@@ -30,7 +54,7 @@ public class BetslipTest extends BaseTest {
         BetslipPage betslipPage = new BetslipPage();
 
         new HomePage().selectSport("soccer")
-                .selectEventAndOutcome(eventIndex, bet);
+                .selectEventAndOutcome(Map.of(Bet.X, 3));
 
         double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
         double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
@@ -46,9 +70,7 @@ public class BetslipTest extends BaseTest {
 
             assertThat(possibleWin).isEqualTo(expectedPossibleWin);
         }
-
         betslipPage.clickPlaceBetButtonOnBetslip();
-
     }
 
     @Description("C6.Filling the field \"Bet total\" with invalid data")
@@ -59,7 +81,7 @@ public class BetslipTest extends BaseTest {
         BetslipPage betslipPage = new BetslipPage();
 
         new HomePage().selectSport("basketball")
-                .selectEventAndOutcome(eventIndex, bet);
+                .selectEventAndOutcome(Map.of(Bet.P1, 2));
 
         double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
         double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);

@@ -1,4 +1,4 @@
-package org.pm.api.model;
+package api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+public class RegistrationResponse {
 
-public class UpdatePasswordRequest {
-  private String oldPassword;
-  private String newPassword;
+  private String token;
+  private String pmToken;
+  AccountInfo AccountInfoObject;
 }

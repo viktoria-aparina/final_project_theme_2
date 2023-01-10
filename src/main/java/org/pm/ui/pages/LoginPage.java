@@ -31,9 +31,9 @@ public class LoginPage extends BasePage {
     }
 
     public HomePage loginWithTestCredentialId() {
-        $(id("id")).sendKeys("139833164");
+        $(id("id")).sendKeys(properties.getProperty("login"));
         log.info("ID was entered");
-        $(id("password")).sendKeys("B@ttleArena");
+        $(id("password")).sendKeys(properties.getProperty("password"));
         log.info("Password was entered");
         $(xpath("//button[@data-id='login-button']")).shouldBe(enabled).click();
         return new HomePage();
