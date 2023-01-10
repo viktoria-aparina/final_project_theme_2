@@ -51,10 +51,11 @@ public class BetslipTest extends BaseTest {
     public void testBetWithValidData() {
         int eventIndex = 1;
         Bet bet = Bet.P1;
+
         BetslipPage betslipPage = new BetslipPage();
 
         new HomePage().selectSport("soccer")
-                .selectEventAndOutcome(Map.of(Bet.X, 3));
+                .selectEventAndOutcome(Map.of(bet, eventIndex));
 
         double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
         double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
@@ -63,7 +64,7 @@ public class BetslipTest extends BaseTest {
 
         for (double betAmount : new double[]{20., 21., 45.76}) {
             betslipPage.enterValueBet(String.valueOf(betAmount));
-            assertThat(betslipPage.isPlaceBetButtonEnabled()).isEqualTo(true);
+            assertThat(betslipPage.isPlaceBetButtonEnabled()).isTrue();
 
             double possibleWin = betslipPage.getPossibleWin();
             double expectedPossibleWin = Math.round(betAmount * oddFromBetSlip * 100.) / 100.;
@@ -78,10 +79,11 @@ public class BetslipTest extends BaseTest {
     public void testBetWithInvalidData() {
         int eventIndex = 0;
         Bet bet = Bet.X;
+
         BetslipPage betslipPage = new BetslipPage();
 
         new HomePage().selectSport("basketball")
-                .selectEventAndOutcome(Map.of(Bet.P1, 2));
+                .selectEventAndOutcome(Map.of(bet, eventIndex));
 
         double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
         double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
@@ -90,7 +92,7 @@ public class BetslipTest extends BaseTest {
 
         for (String betAmount : new String[]{"aaa", "!@#$%^&*()_+", "", "9"}) {
             betslipPage.enterValueBet(betAmount);
-            assertThat(betslipPage.isPlaceBetButtonEnabled()).isEqualTo(false);
+            assertThat(betslipPage.isPlaceBetButtonEnabled()).isFalse();
         }
     }
 }
