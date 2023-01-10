@@ -1,6 +1,6 @@
 package org.pm.ui;
 
-import org.aspectj.lang.annotation.After;
+import com.codeborne.selenide.Selenide;
 import org.pm.ui.pages.HomePage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -15,8 +15,8 @@ public class BaseTest {
                 .loginWithTestCredentialId();
     }
 
-    @AfterMethod
-    public void clearBetslipAndClose() {
-        new HomePage().clearBetslip().close();
+    @AfterMethod(alwaysRun = true)
+    public void tearDown() {
+        Selenide.closeWebDriver();
     }
 }

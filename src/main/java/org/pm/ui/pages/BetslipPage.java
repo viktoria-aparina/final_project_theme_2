@@ -1,5 +1,6 @@
 package org.pm.ui.pages;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
@@ -11,6 +12,7 @@ import java.util.List;
 import static com.codeborne.selenide.Condition.enabled;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 import static org.openqa.selenium.By.xpath;
 
 @Log4j2
@@ -45,8 +47,12 @@ public class BetslipPage extends BasePage {
         return this;
     }
 
-    public String getAlert() {
-        return $(xpath("//div[@data-id='betslip-success-betslip-content']/span")).getText();
+    public String getSuccessAlert() {
+        return $(xpath("//button[@data-id='betslip-success-betslip-button']//div[contains(@class, 'SuccessBetslip__')]")).getText();
+    }
+
+    public String getEmptyAlert() {
+        return $(xpath("//div[@data-id='empty-betslip-wrapper']//span[1]")).getText();
     }
 
     public static double getValueBet() {
@@ -83,6 +89,7 @@ public class BetslipPage extends BasePage {
 
     public SportPage clickPlaceBetButtonOnBetslip() {
         $(xpath("//button[@data-id='betslip-place-bet-button']")).shouldBe(enabled).click();
+        log.info("Click on button \"Place bet\" in notification message was successful");
         return new SportPage();
     }
 
