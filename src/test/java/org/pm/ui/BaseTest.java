@@ -6,7 +6,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 public class BaseTest {
-
     @BeforeMethod
     public void loginWithTestCredentialsId() {
         HomePage.open()
@@ -14,7 +13,6 @@ public class BaseTest {
                 .chooseLoginTypeById()
                 .loginWithTestCredentialId();
     }
-
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
         Selenide.closeWebDriver();
