@@ -1,13 +1,6 @@
 package org.pm.ui;
 
-import static com.codeborne.selenide.Selenide.$$;
-import static org.openqa.selenium.By.xpath;
-
-import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Description;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import org.aspectj.lang.annotation.DeclareError;
 import org.pm.ui.pages.Bet;
 import org.pm.ui.pages.BetslipPage;
 import org.pm.ui.pages.HomePage;
@@ -61,7 +54,7 @@ public class BetslipTest extends BaseTest {
         BetslipPage betslipPage = new BetslipPage();
 
         new HomePage().selectSport("soccer")
-                .selectEventAndOutcome(eventIndex, bet);
+                .selectEventAndOutcome(Map.of(Bet.X, 3));
 
         double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
         double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
@@ -77,9 +70,7 @@ public class BetslipTest extends BaseTest {
 
             assertThat(possibleWin).isEqualTo(expectedPossibleWin);
         }
-
         betslipPage.clickPlaceBetButtonOnBetslip();
-
     }
 
     @Description("C6.Filling the field \"Bet total\" with invalid data")
@@ -90,7 +81,7 @@ public class BetslipTest extends BaseTest {
         BetslipPage betslipPage = new BetslipPage();
 
         new HomePage().selectSport("basketball")
-                .selectEventAndOutcome(eventIndex, bet);
+                .selectEventAndOutcome(Map.of(Bet.P1, 2));
 
         double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
         double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
@@ -102,21 +93,4 @@ public class BetslipTest extends BaseTest {
             assertThat(betslipPage.isPlaceBetButtonEnabled()).isEqualTo(false);
         }
     }
-
-    @Description("UI: Creating a parlay with valid data")
-    @Test(groups = "Volosiuk UI test")
-    public void createParlayBetTest(){
-
-
-        SportPage soccerPage = new HomePage().selectSport("soccer");
-        soccerPage.selectEvent(2, Bet.P1);
-        soccerPage.selectEventAndOutcome(0, Bet.P2);
-
-
-        int l=4;
-
-
-    }
-
-
 }

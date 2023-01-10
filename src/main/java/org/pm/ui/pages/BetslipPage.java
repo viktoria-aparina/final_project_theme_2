@@ -101,4 +101,25 @@ public class BetslipPage extends BasePage {
         String possibleWinText = $(By.xpath("//span[@data-id='betslip-place-bet-button-amount']")).getText();
         return Double.parseDouble(possibleWinText.replace('\n', ' ').split(" ")[0]);
     }
+
+    public BetslipPage clickRemoveButton() {
+        $(xpath("//button[@data-id='betslip-header-delete-button']")).shouldBe(enabled).click();
+        log.info("Click on button \"Remove\" in notification message was successful");
+        return this;
+    }
+
+    public BetslipPage clickYesInNotificationMessage() {
+        $(xpath("//div[contains(@class, 'Dialog__actions')]//button[2]")).shouldBe(enabled).click();
+        log.info("Click on button \"YES\" in notification message was successful");
+        return this;
+    }
+
+    public ArrayList<Double> getCoefficientsFromBetslip() {
+        ElementsCollection coefficients = $$(xpath("//div[@data-id='betslip-outcome-block']//div[@data-id='animated-odds-value']//span"));
+        ArrayList<Double> coefficientsFromBetslip = new ArrayList<>();
+        for (SelenideElement coefficient : coefficients) {
+            coefficientsFromBetslip.add(Double.valueOf(coefficient.getText()));
+        }
+        return coefficientsFromBetslip;
+    }
 }
