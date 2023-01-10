@@ -48,8 +48,7 @@ public class SportPage extends BasePage {
     public double getOddFromOutcome(int eventIndex, Bet bet) {
         String odd = $$(xpath("//div[@data-id='event-card-container-event']"))
                         .get(eventIndex)
-                        .find(xpath(bet.getLocator())).shouldBe(visible)
-                        .find(xpath(".//div[@data-id=\"animated-odds-value\"]//span")).getText();
+                        .find(xpath(bet.getLocator())).shouldBe(visible).getText();
         return Double.parseDouble(odd);
     }
 }
