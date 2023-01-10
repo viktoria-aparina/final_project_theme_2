@@ -3,6 +3,7 @@ package org.pm.ui.pages;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 
 import static com.codeborne.selenide.Condition.visible;
@@ -34,7 +35,8 @@ public class HomePage extends BasePage {
     }
 
     public LoginPage clickOnLoginButton() {
-        $(xpath("//button[@data-id='header-login']")).click();
+        Configuration.timeout = 10000;
+        $(xpath("//button[@data-id='header-login']")).shouldBe(visible).click();
         log.info("Click on button \"Log in\" was successful");
         return new LoginPage();
     }

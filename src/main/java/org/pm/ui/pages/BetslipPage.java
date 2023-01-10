@@ -3,9 +3,11 @@ package org.pm.ui.pages;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.codeborne.selenide.Condition.enabled;
 import static com.codeborne.selenide.Condition.visible;
@@ -29,9 +31,9 @@ public class BetslipPage extends BasePage {
 
     static SelenideElement valueBetLocator = $(xpath("//input[@data-id='betslip-stake-input']"));
 
-    public BetslipPage enterValueBet(Double valueBet) {
+    public BetslipPage enterValueBet(String valueBet) {
         valueBetLocator.clear();
-        valueBetLocator.setValue(String.valueOf(valueBet)).pressTab();
+        valueBetLocator.setValue(valueBet).pressTab();
         return this;
     }
 
@@ -69,6 +71,17 @@ public class BetslipPage extends BasePage {
         return result;
     }
 
+    public List<Double> getOddsInBetslip() {
+        List<Double> oddValues = new ArrayList<>();
+
+        for (SelenideElement outcome : $(By.xpath("//div[@data-id='betslip-container']"))
+                .findAll(By.xpath(".//div[contains(@class, 'Outcome__wrapper') and not(contains(@class, 'Recommended'))]"))) {
+            SelenideElement odd = outcome.find(By.xpath(".//div[@data-id='animated-odds-value']"));
+            oddValues.add(Double.parseDouble(odd.getText()));
+        }
+        return oddValues;
+    }
+
     public LoginPage clickLoginOnBetslip() {
         $(xpath("//button[@data-id='betslip-place-bet-button']")).shouldBe(enabled).click();
         return new LoginPage();
@@ -80,24 +93,12 @@ public class BetslipPage extends BasePage {
         return new SportPage();
     }
 
-    public BetslipPage clickRemoveButton() {
-        $(xpath("//button[@data-id='betslip-header-delete-button']")).shouldBe(enabled).click();
-        log.info("Click on button \"Remove\" in notification message was successful");
-        return this;
+    public boolean isPlaceBetButtonEnabled() {
+        return $(By.xpath("//button[@data-id='betslip-place-bet-button']")).isEnabled();
     }
 
-    public BetslipPage clickYesInNotificationMessage() {
-        $(xpath("//div[contains(@class, 'Dialog__actions')]//button[2]")).shouldBe(enabled).click();
-        log.info("Click on button \"YES\" in notification message was successful");
-        return this;
-    }
-
-    public ArrayList<Double> getCoefficientsFromBetslip() {
-        ElementsCollection coefficients = $$(xpath("//div[@data-id='betslip-outcome-block']//div[@data-id='animated-odds-value']//span"));
-        ArrayList<Double> coefficientsFromBetslip = new ArrayList<>();
-        for (SelenideElement coefficient : coefficients) {
-            coefficientsFromBetslip.add(Double.valueOf(coefficient.getText()));
-        }
-        return coefficientsFromBetslip;
+    public double getPossibleWin() {
+        String possibleWinText = $(By.xpath("//span[@data-id='betslip-place-bet-button-amount']")).getText();
+        return Double.parseDouble(possibleWinText.replace('\n', ' ').split(" ")[0]);
     }
 }

@@ -45,4 +45,54 @@ public class BetslipTest extends BaseTest {
         assertThat(new BetslipPage().getEmptyAlert()).as("All bets weren't removed from the betslip" +
                 "The text in alert is differ from expected").isEqualTo("Your betslip is empty");
     }
+
+    @Description("C10.Filling the field \"Bet total\" with valid data")
+    @Test(groups = "Riabtseva UI tests")
+    public void testBetWithValidData() {
+        int eventIndex = 1;
+        Bet bet = Bet.P1;
+        BetslipPage betslipPage = new BetslipPage();
+
+        new HomePage().selectSport("soccer")
+                .selectEventAndOutcome(eventIndex, bet);
+
+        double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
+        double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
+
+        assertThat(oddFromOutcome).isEqualTo(oddFromBetSlip);
+
+        for (double betAmount : new double[]{20., 21., 45.76}) {
+            betslipPage.enterValueBet(String.valueOf(betAmount));
+            assertThat(betslipPage.isPlaceBetButtonEnabled()).isEqualTo(true);
+
+            double possibleWin = betslipPage.getPossibleWin();
+            double expectedPossibleWin = Math.round(betAmount * oddFromBetSlip * 100.) / 100.;
+
+            assertThat(possibleWin).isEqualTo(expectedPossibleWin);
+        }
+
+        betslipPage.clickPlaceBetButtonOnBetslip();
+
+    }
+
+    @Description("C6.Filling the field \"Bet total\" with invalid data")
+    @Test(groups = "Riabtseva UI tests")
+    public void testBetWithInvalidData() {
+        int eventIndex = 0;
+        Bet bet = Bet.X;
+        BetslipPage betslipPage = new BetslipPage();
+
+        new HomePage().selectSport("basketball")
+                .selectEventAndOutcome(eventIndex, bet);
+
+        double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
+        double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
+
+        assertThat(oddFromOutcome).isEqualTo(oddFromBetSlip);
+
+        for (String betAmount : new String[]{"aaa", "!@#$%^&*()_+", "", "9"}) {
+            betslipPage.enterValueBet(betAmount);
+            assertThat(betslipPage.isPlaceBetButtonEnabled()).isEqualTo(false);
+        }
+    }
 }
