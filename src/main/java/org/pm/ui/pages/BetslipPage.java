@@ -64,9 +64,9 @@ public class BetslipPage extends BasePage {
     }
 
     public static double calculatePossibleWinningAmount(double valueBet, ArrayList<Double> coefficients) {
-        double result = 0;
-        for (int i = 0; i < coefficients.size(); i++) {
-            result = valueBet * coefficients.get(i);
+        double result = valueBet;
+        for (Double coefficient : coefficients) {
+            result = result * coefficient;
         }
         return result;
     }

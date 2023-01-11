@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.Assert.assertEquals;
 
 public class BetslipTest extends BaseTest {
 
@@ -94,5 +95,31 @@ public class BetslipTest extends BaseTest {
             betslipPage.enterValueBet(betAmount);
             assertThat(betslipPage.isPlaceBetButtonEnabled()).isFalse();
         }
+    }
+
+    @Description("UI: Creating a parlay with valid data")
+    @Test(groups = "Volosiuk UI tests")
+    public void parlayWithValidDataTest() {
+
+        BetslipPage betslipPage = new BetslipPage();
+
+        new HomePage().selectSport("soccer");
+        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
+
+        ArrayList<Double> coefficientsFromSportPage = new SportPage()
+            .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1));
+        assertThat(new BetslipPage().getCoefficientsFromBetslip())
+            .as("Coefficients in betslip and sport page are different")
+            .isEqualTo(coefficientsFromSportPage);
+
+        betslipPage.enterValueBet("20");
+        assertEquals(betslipPage.getPossibleWin(),
+            BetslipPage.calculatePossibleWinningAmount(BetslipPage.getValueBet(),
+                coefficientsFromSportPage),
+            "Possible winning amount is wrong");
+
+        betslipPage.clickPlaceBetButtonOnBetslip();
+        assertThat(new BetslipPage().getSuccessAlert()).as("Parlay bet was created successfully! " +
+            "The text in alert is differ from expected").isEqualTo("Bet accepted");
     }
 }
