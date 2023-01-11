@@ -135,8 +135,10 @@ public class BetslipTest extends BaseTest {
             "The text in alert is differ from expected").isEqualTo("Bet accepted");
     }
 
-    @Description("UI: Creating a system with valid data")
-    @Test(groups = "Volosiuk UI tests")
+    @TmsLink("16")
+    @Story("4-write-ui-autotests")
+    @Description("Creating a system with valid data")
+    @Test(groups = { "Volosiuk UI tests"})
     public void systemWithValidDataTest() {
 
         BetslipPage betslipPage = new BetslipPage();
