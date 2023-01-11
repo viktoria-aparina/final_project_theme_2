@@ -47,6 +47,7 @@ public class BetslipPage extends BasePage {
         return this;
     }
 
+
     public String getSuccessAlert() {
         return $(xpath("//button[@data-id='betslip-success-betslip-button']//div[contains(@class, 'SuccessBetslip__')]")).getText();
     }
@@ -121,5 +122,20 @@ public class BetslipPage extends BasePage {
             coefficientsFromBetslip.add(Double.valueOf(coefficient.getText()));
         }
         return coefficientsFromBetslip;
+    }
+
+    public void clickSystemButton() {
+        $(xpath("//div[@data-id ='system']")).shouldBe(enabled).click();
+    }
+
+    public static double calculatePossibleSystemWinningAmount(double valueBet, ArrayList<Double> coefficients) {
+        double result = 0;
+        for (int i = 0; i < coefficients.size() - 1; i++) {
+            for (int j = i + 1; j < coefficients.size(); j++) {
+                double temp = coefficients.get(i) * coefficients.get(j);
+                result += temp;
+            }
+        }
+        return Math.round((result * valueBet / coefficients.size()) *1000.)/1000.;
     }
 }
