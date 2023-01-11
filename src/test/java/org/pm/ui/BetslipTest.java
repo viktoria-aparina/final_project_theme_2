@@ -120,7 +120,7 @@ public class BetslipTest extends BaseTest {
 
         ArrayList<Double> coefficientsFromSportPage = new SportPage()
             .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1));
-        assertThat(new BetslipPage().getCoefficientsFromBetslip())
+        assertThat(betslipPage.getCoefficientsFromBetslip())
             .as("Coefficients in betslip and sport page are different")
             .isEqualTo(coefficientsFromSportPage);
 
@@ -131,7 +131,33 @@ public class BetslipTest extends BaseTest {
             "Possible winning amount is wrong");
 
         betslipPage.clickPlaceBetButtonOnBetslip();
-        assertThat(new BetslipPage().getSuccessAlert()).as("Parlay bet was created successfully! " +
+        assertThat(betslipPage.getSuccessAlert()).as("Parlay bet was created successfully! " +
+            "The text in alert is differ from expected").isEqualTo("Bet accepted");
+    }
+
+    @Description("UI: Creating a system with valid data")
+    @Test(groups = "Volosiuk UI tests")
+    public void systemWithValidDataTest() {
+
+        BetslipPage betslipPage = new BetslipPage();
+
+        new HomePage().selectSport("soccer");
+        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
+
+        ArrayList<Double> coefficientsFromSportPage = new SportPage()
+            .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1, Bet.X, 2));
+        assertThat(betslipPage.getCoefficientsFromBetslip())
+            .as("Coefficients in betslip and sport page are different")
+            .isEqualTo(coefficientsFromSportPage);
+
+        betslipPage.enterValueBet("20").clickSystemButton();
+        assertEquals(betslipPage.getPossibleWin(),
+            BetslipPage.calculatePossibleSystemWinningAmount(BetslipPage.getValueBet(),
+                coefficientsFromSportPage),
+            "Possible winning amount is wrong");
+
+        betslipPage.clickPlaceBetButtonOnBetslip();
+        assertThat(betslipPage.getSuccessAlert()).as("System bet was created successfully! " +
             "The text in alert is differ from expected").isEqualTo("Bet accepted");
     }
 }
