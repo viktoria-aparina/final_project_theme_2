@@ -69,7 +69,7 @@ public class BetslipPage extends BasePage {
         for (Double coefficient : coefficients) {
             result = result * coefficient;
         }
-        return result;
+        return Math.round(result * 100.) / 100.;
     }
 
     public List<Double> getOddsInBetslip() {
