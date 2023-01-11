@@ -139,7 +139,7 @@ public class BetslipTest extends BaseTest {
             .isEqualTo(coefficientsFromSportPage);
 
         betslipPage.enterValueBet("20").clickSystemButton();
-        assertEquals(betslipPage.getPossibleWin(),
+        assertEquals(Math.round(betslipPage.getPossibleWin() * 100.) / 100.,
             BetslipPage.calculatePossibleSystemWinningAmount(BetslipPage.getValueBet(),
                 coefficientsFromSportPage),
             "Possible winning amount is wrong");

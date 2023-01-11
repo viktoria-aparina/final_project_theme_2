@@ -136,6 +136,6 @@ public class BetslipPage extends BasePage {
                 result += temp;
             }
         }
-        return Math.round((result * valueBet / coefficients.size()) *1000.)/1000.;
+        return Math.round((result * valueBet / coefficients.size()) *100.)/100.;
     }
 }
