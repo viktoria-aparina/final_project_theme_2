@@ -29,7 +29,6 @@ public class BetslipTest extends BaseTest {
 
     betslipPage.chooseProposedAmountForBet().clickPlaceBetButtonOnBetslip();
     assertAcceptedBet(betslipPage);
-
   }
 
   @TmsLink("13")
@@ -58,8 +57,7 @@ public class BetslipTest extends BaseTest {
 
     BetslipPage betslipPage = new BetslipPage();
 
-    new HomePage().selectSport("soccer")
-        .selectEventAndOutcome(Map.of(bet, eventIndex));
+    new HomePage().selectSport("soccer").selectEventAndOutcome(Map.of(bet, eventIndex));
 
     double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
     double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
@@ -107,13 +105,19 @@ public class BetslipTest extends BaseTest {
   @Description("Creating a parlay with valid data")
   @Test(groups = { "Volosiuk UI tests"})
   public void parlayWithValidDataTest() {
+    String sportName = "soccer";
+    int firstEventIndex = 0;
+    Bet firstBet = Bet.P1;
+    int secondEventIndex = 1;
+    Bet secondBet = Bet.P2;
+
     BetslipPage betslipPage = new BetslipPage();
 
-    SportPage sportPage = new HomePage().selectSport("soccer");
+    SportPage sportPage = new HomePage().selectSport(sportName);
     assertSportPageOpened(sportPage);
 
     ArrayList<Double> coefficientsFromSportPage = sportPage
-        .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1));
+        .selectEventAndOutcome(Map.of(firstBet, firstEventIndex, secondBet, secondEventIndex));
 
     assertCoefficient(coefficientsFromSportPage);
 
@@ -132,13 +136,22 @@ public class BetslipTest extends BaseTest {
   @Description("Creating a system with valid data")
   @Test(groups = { "Volosiuk UI tests"})
   public void systemWithValidDataTest() {
+    String sportName = "soccer";
+    int firstEventIndex = 0;
+    Bet firstBet = Bet.P1;
+    int secondEventIndex = 1;
+    Bet secondBet = Bet.P2;
+    int thirdEventIndex = 3;
+    Bet thirdBet = Bet.X;
+
     BetslipPage betslipPage = new BetslipPage();
 
-    SportPage sportPage = new HomePage().selectSport("soccer");
+    SportPage sportPage = new HomePage().selectSport(sportName);
     assertSportPageOpened(sportPage);
 
     ArrayList<Double> coefficientsFromSportPage = sportPage
-        .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1, Bet.X, 3));
+        .selectEventAndOutcome(Map.of(firstBet, firstEventIndex, secondBet, secondEventIndex,
+            thirdBet, thirdEventIndex));
 
     assertCoefficient(coefficientsFromSportPage);
 
