@@ -13,153 +13,142 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.testng.Assert.assertEquals;
 
 public class BetslipTest extends BaseTest {
 
-    @TmsLink("7")
-    @Story("4-write-ui-autotests")
-    @Description("UI: Place a single bet using proposed bet amount")
-    @Test(groups = { "Aparina UI tests" })
-    public void addSingleBetFromProposedBetsTest() {
-        new HomePage().selectSport("soccer");
-        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
+  @TmsLink("7")
+  @Story("4-write-ui-autotests")
+  @Description("UI: Place a single bet using proposed bet amount")
+  @Test(groups = "Aparina UI tests")
+  public void addSingleBetFromProposedBetsTest() {
+    BetslipPage betslipPage = new BetslipPage();
+    SportPage sportPage = new HomePage().selectSport("soccer");
+    assertSportPageOpened(sportPage);
 
-        ArrayList<Double> coefficientsFromSportPage = new SportPage().selectEventAndOutcome(Map.of(Bet.X, 2));
-        assertThat(new BetslipPage().getCoefficientsFromBetslip())
-                .as("Coefficients in betslip and sport page are different")
-                .isEqualTo(coefficientsFromSportPage);
+    assertCoefficient(sportPage.selectEventAndOutcome(Map.of(Bet.X, 2)));
 
-        new BetslipPage().chooseProposedAmountForBet().clickPlaceBetButtonOnBetslip();
-        assertThat(new BetslipPage().getSuccessAlert()).as("Single bet was created successfully! " +
-                "The text in alert is differ from expected").isEqualTo("Bet accepted");
+    betslipPage.chooseProposedAmountForBet().clickPlaceBetButtonOnBetslip();
+    assertAcceptedBet(betslipPage);
+
+  }
+
+  @TmsLink("13")
+  @Story("4-write-ui-autotests")
+  @Description("UI: Removing all bets from the betslip using button \"Remove\"")
+  @Test(groups = { "Aparina UI tests" })
+  public void removeAllBetsFromBetslip() {
+    BetslipPage betslipPage = new BetslipPage();
+    SportPage sportPage = new HomePage().selectSport("soccer");
+    assertSportPageOpened(sportPage);
+
+    assertCoefficient(sportPage.selectEventAndOutcome(Map.of(Bet.P1, 4, Bet.P2, 3, Bet.X, 2)));
+
+    betslipPage.clickRemoveButton().clickYesInNotificationMessage();
+    assertThat(betslipPage.getEmptyAlert()).as("All bets weren't removed from the betslip" +
+        "The text in alert is differ from expected").isEqualTo("Your betslip is empty");
+  }
+
+  @TmsLink("10")
+  @Story("4-write-ui-autotests")
+  @Description("Filling the field \"Bet total\" with valid data")
+  @Test(groups = { "Riabtseva UI tests" })
+  public void testBetWithValidData() {
+    int eventIndex = 1;
+    Bet bet = Bet.P1;
+
+    BetslipPage betslipPage = new BetslipPage();
+
+    new HomePage().selectSport("soccer")
+        .selectEventAndOutcome(Map.of(bet, eventIndex));
+
+    double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
+    double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
+
+    assertThat(oddFromOutcome).isEqualTo(oddFromBetSlip);
+
+    for (double betAmount : new double[] {20., 21., 45.76}) {
+      betslipPage.enterValueBet(String.valueOf(betAmount));
+      assertThat(betslipPage.isPlaceBetButtonEnabled()).isTrue();
+
+      double possibleWin = betslipPage.getPossibleWin();
+      double expectedPossibleWin = Math.round(betAmount * oddFromBetSlip * 100.) / 100.;
+
+      assertThat(possibleWin).isEqualTo(expectedPossibleWin);
     }
+    betslipPage.clickPlaceBetButtonOnBetslip();
+  }
 
-    @TmsLink("13")
-    @Story("4-write-ui-autotests")
-    @Description("UI: Removing all bets from the betslip using button \"Remove\"")
-    @Test(groups = { "Aparina UI tests" })
-    public void removeAllBetsFromBetslip() {
-        new HomePage().selectSport("soccer");
-        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
+  @TmsLink("6")
+  @Story("4-write-ui-autotests")
+  @Description("Filling the field \"Bet total\" with invalid data")
+  @Test(groups = { "Riabtseva UI tests" })
+  public void testBetWithInvalidData() {
+    int eventIndex = 0;
+    Bet bet = Bet.X;
 
-        ArrayList<Double> coefficientsFromSportPage = new SportPage().selectEventAndOutcome(Map.of(Bet.P1, 4, Bet.P2, 3));
-        assertThat(new BetslipPage().getCoefficientsFromBetslip())
-                .as("Coefficients in betslip and sport page are different")
-                .isEqualTo(coefficientsFromSportPage);
+    BetslipPage betslipPage = new BetslipPage();
 
-        new BetslipPage().clickRemoveButton().clickYesInNotificationMessage();
-        assertThat(new BetslipPage().getEmptyAlert()).as("All bets weren't removed from the betslip" +
-                "The text in alert is differ from expected").isEqualTo("Your betslip is empty");
+    new HomePage().selectSport("basketball")
+        .selectEventAndOutcome(Map.of(bet, eventIndex));
+
+    double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
+    double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
+
+    assertThat(oddFromOutcome).isEqualTo(oddFromBetSlip);
+
+    for (String betAmount : new String[] {"aaa", "!@#$%^&*()_+", "", "9"}) {
+      betslipPage.enterValueBet(betAmount);
+      assertThat(betslipPage.isPlaceBetButtonEnabled()).isFalse();
     }
+  }
 
-    @TmsLink("10")
-    @Story("4-write-ui-autotests")
-    @Description("Filling the field \"Bet total\" with valid data")
-    @Test(groups = { "Riabtseva UI tests" })
-    public void testBetWithValidData() {
-        int eventIndex = 1;
-        Bet bet = Bet.P1;
+  @TmsLink("15")
+  @Story("4-write-ui-autotests")
+  @Description("Creating a parlay with valid data")
+  @Test(groups = { "Volosiuk UI tests"})
+  public void parlayWithValidDataTest() {
+    BetslipPage betslipPage = new BetslipPage();
 
-        BetslipPage betslipPage = new BetslipPage();
+    SportPage sportPage = new HomePage().selectSport("soccer");
+    assertSportPageOpened(sportPage);
 
-        new HomePage().selectSport("soccer")
-                .selectEventAndOutcome(Map.of(bet, eventIndex));
+    ArrayList<Double> coefficientsFromSportPage = sportPage
+        .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1));
 
-        double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
-        double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
+    assertCoefficient(coefficientsFromSportPage);
 
-        assertThat(oddFromOutcome).isEqualTo(oddFromBetSlip);
+    betslipPage.enterValueBet("20");
+    assertThat(Math.round(betslipPage.getPossibleWin() * 100.) / 100.)
+        .as("Coefficients in betslip and sport page are different")
+        .isEqualTo(BetslipPage.calculatePossibleWinningAmount(BetslipPage.getValueBet(),
+            coefficientsFromSportPage));
 
-        for (double betAmount : new double[]{20., 21., 45.76}) {
-            betslipPage.enterValueBet(String.valueOf(betAmount));
-            assertThat(betslipPage.isPlaceBetButtonEnabled()).isTrue();
+    betslipPage.clickPlaceBetButtonOnBetslip();
+    assertAcceptedBet(betslipPage);
+  }
 
-            double possibleWin = betslipPage.getPossibleWin();
-            double expectedPossibleWin = Math.round(betAmount * oddFromBetSlip * 100.) / 100.;
+  @TmsLink("16")
+  @Story("4-write-ui-autotests")
+  @Description("Creating a system with valid data")
+  @Test(groups = { "Volosiuk UI tests"})
+  public void systemWithValidDataTest() {
+    BetslipPage betslipPage = new BetslipPage();
 
-            assertThat(possibleWin).isEqualTo(expectedPossibleWin);
-        }
-        betslipPage.clickPlaceBetButtonOnBetslip();
-    }
+    SportPage sportPage = new HomePage().selectSport("soccer");
+    assertSportPageOpened(sportPage);
 
-    @TmsLink("6")
-    @Story("4-write-ui-autotests")
-    @Description("Filling the field \"Bet total\" with invalid data")
-    @Test(groups = { "Riabtseva UI tests" })
-    public void testBetWithInvalidData() {
-        int eventIndex = 0;
-        Bet bet = Bet.X;
+    ArrayList<Double> coefficientsFromSportPage = sportPage
+        .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1, Bet.X, 3));
 
-        BetslipPage betslipPage = new BetslipPage();
+    assertCoefficient(coefficientsFromSportPage);
 
-        new HomePage().selectSport("basketball")
-                .selectEventAndOutcome(Map.of(bet, eventIndex));
+    betslipPage.enterValueBet("20").clickSystemButton();
+    assertThat(Math.round(betslipPage.getPossibleWin() * 100.) / 100.)
+        .as("Coefficients in betslip and sport page are different")
+        .isEqualTo(BetslipPage.calculatePossibleSystemWinningAmount(BetslipPage.getValueBet(),
+            coefficientsFromSportPage));
 
-        double oddFromOutcome = new SportPage().getOddFromOutcome(eventIndex, bet);
-        double oddFromBetSlip = betslipPage.getOddsInBetslip().get(0);
-
-        assertThat(oddFromOutcome).isEqualTo(oddFromBetSlip);
-
-        for (String betAmount : new String[]{"aaa", "!@#$%^&*()_+", "", "9"}) {
-            betslipPage.enterValueBet(betAmount);
-            assertThat(betslipPage.isPlaceBetButtonEnabled()).isFalse();
-        }
-    }
-
-    @TmsLink("15")
-    @Story("4-write-ui-autotests")
-    @Description("Creating a parlay with valid data")
-    @Test(groups = { "Volosiuk UI tests"})
-    public void parlayWithValidDataTest() {
-
-        BetslipPage betslipPage = new BetslipPage();
-
-        new HomePage().selectSport("soccer");
-        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
-
-        ArrayList<Double> coefficientsFromSportPage = new SportPage()
-            .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1));
-        assertThat(betslipPage.getCoefficientsFromBetslip())
-            .as("Coefficients in betslip and sport page are different")
-            .isEqualTo(coefficientsFromSportPage);
-
-        betslipPage.enterValueBet("20");
-        assertEquals(Math.round(betslipPage.getPossibleWin() * 100.) / 100.,
-            BetslipPage.calculatePossibleWinningAmount(BetslipPage.getValueBet(),
-                coefficientsFromSportPage),
-            "Possible winning amount is wrong");
-
-        betslipPage.clickPlaceBetButtonOnBetslip();
-        assertThat(betslipPage.getSuccessAlert()).as("Parlay bet was created successfully! " +
-            "The text in alert is differ from expected").isEqualTo("Bet accepted");
-    }
-
-    @TmsLink("16")
-    @Story("4-write-ui-autotests")
-    @Description("Creating a system with valid data")
-    @Test(groups = { "Volosiuk UI tests"})
-    public void systemWithValidDataTest() {
-
-        BetslipPage betslipPage = new BetslipPage();
-
-        new HomePage().selectSport("soccer");
-        assertThat(new SportPage().isPageOpened()).as("The Sport page wasn't opened").isTrue();
-
-        ArrayList<Double> coefficientsFromSportPage = new SportPage()
-            .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1, Bet.X, 2));
-        assertThat(betslipPage.getCoefficientsFromBetslip())
-            .as("Coefficients in betslip and sport page are different")
-            .isEqualTo(coefficientsFromSportPage);
-
-        betslipPage.enterValueBet("20").clickSystemButton();
-        assertEquals(Math.round(betslipPage.getPossibleWin() * 100.) / 100.,
-            BetslipPage.calculatePossibleSystemWinningAmount(BetslipPage.getValueBet(),
-                coefficientsFromSportPage),
-            "Possible winning amount is wrong");
-
-        betslipPage.clickPlaceBetButtonOnBetslip();
-        assertThat(betslipPage.getSuccessAlert()).as("System bet was created successfully! " +
-            "The text in alert is differ from expected").isEqualTo("Bet accepted");
-    }
+    betslipPage.clickPlaceBetButtonOnBetslip();
+    assertAcceptedBet(betslipPage);
+  }
 }
