@@ -36,7 +36,7 @@ public class LoginTest extends BaseTest {
 
   @TmsLink("26")
   @Story("6-write-ui-autotests")
-  @Description("API: Login as registered user")
+  @Description("API: Login as unregistered user")
   @Test(groups = {"Aparina API tests"})
   public void loginAsUnregisteredUserTest() {
     LoginRequest newLoginUser = new UserRegistrationProvider().getNewUserLogin();

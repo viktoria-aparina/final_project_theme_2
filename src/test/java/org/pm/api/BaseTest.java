@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BaseTest {
   RegistrationApiClient registrationApiClient = new RegistrationApiClient();
 
-
   public void assertStatusCode(int actualStatusCode, int expectedStatusCode) {
     assertThat(actualStatusCode).as("Status code doesn't match with expected")
         .isEqualTo(expectedStatusCode);

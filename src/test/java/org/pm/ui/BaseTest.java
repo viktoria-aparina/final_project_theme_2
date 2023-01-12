@@ -38,6 +38,4 @@ public class BaseTest {
     assertThat(betslipPage.getSuccessAlert()).as("Single bet was created successfully! " +
         "The text in alert is differ from expected").isEqualTo("Bet accepted");
   }
-
-
 }

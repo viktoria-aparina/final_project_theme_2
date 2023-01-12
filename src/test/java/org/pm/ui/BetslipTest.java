@@ -1,6 +1,8 @@
 package org.pm.ui;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import org.pm.ui.pages.Bet;
 import org.pm.ui.pages.BetslipPage;
 import org.pm.ui.pages.HomePage;
@@ -14,6 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BetslipTest extends BaseTest {
 
+  @TmsLink("7")
+  @Story("4-write-ui-autotests")
   @Description("UI: Place a single bet using proposed bet amount")
   @Test(groups = "Aparina UI tests")
   public void addSingleBetFromProposedBetsTest() {
@@ -28,8 +32,10 @@ public class BetslipTest extends BaseTest {
 
   }
 
+  @TmsLink("13")
+  @Story("4-write-ui-autotests")
   @Description("UI: Removing all bets from the betslip using button \"Remove\"")
-  @Test(groups = "Aparina UI tests")
+  @Test(groups = { "Aparina UI tests" })
   public void removeAllBetsFromBetslip() {
     BetslipPage betslipPage = new BetslipPage();
     SportPage sportPage = new HomePage().selectSport("soccer");
@@ -42,8 +48,10 @@ public class BetslipTest extends BaseTest {
         "The text in alert is differ from expected").isEqualTo("Your betslip is empty");
   }
 
-  @Description("C10.Filling the field \"Bet total\" with valid data")
-  @Test(groups = "Riabtseva UI tests")
+  @TmsLink("10")
+  @Story("4-write-ui-autotests")
+  @Description("Filling the field \"Bet total\" with valid data")
+  @Test(groups = { "Riabtseva UI tests" })
   public void testBetWithValidData() {
     int eventIndex = 1;
     Bet bet = Bet.P1;
@@ -70,8 +78,10 @@ public class BetslipTest extends BaseTest {
     betslipPage.clickPlaceBetButtonOnBetslip();
   }
 
-  @Description("C6.Filling the field \"Bet total\" with invalid data")
-  @Test(groups = "Riabtseva UI tests")
+  @TmsLink("6")
+  @Story("4-write-ui-autotests")
+  @Description("Filling the field \"Bet total\" with invalid data")
+  @Test(groups = { "Riabtseva UI tests" })
   public void testBetWithInvalidData() {
     int eventIndex = 0;
     Bet bet = Bet.X;
@@ -92,8 +102,10 @@ public class BetslipTest extends BaseTest {
     }
   }
 
-  @Description("UI: Creating a parlay with valid data")
-  @Test(groups = "Volosiuk UI tests")
+  @TmsLink("15")
+  @Story("4-write-ui-autotests")
+  @Description("Creating a parlay with valid data")
+  @Test(groups = { "Volosiuk UI tests"})
   public void parlayWithValidDataTest() {
     BetslipPage betslipPage = new BetslipPage();
 
@@ -115,8 +127,10 @@ public class BetslipTest extends BaseTest {
     assertAcceptedBet(betslipPage);
   }
 
-  @Description("UI: Creating a system with valid data")
-  @Test(groups = "Volosiuk UI tests")
+  @TmsLink("16")
+  @Story("4-write-ui-autotests")
+  @Description("Creating a system with valid data")
+  @Test(groups = { "Volosiuk UI tests"})
   public void systemWithValidDataTest() {
     BetslipPage betslipPage = new BetslipPage();
 
@@ -124,7 +138,7 @@ public class BetslipTest extends BaseTest {
     assertSportPageOpened(sportPage);
 
     ArrayList<Double> coefficientsFromSportPage = sportPage
-        .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1, Bet.X, 2));
+        .selectEventAndOutcome(Map.of(Bet.P1, 0, Bet.P2, 1, Bet.X, 3));
 
     assertCoefficient(coefficientsFromSportPage);
 
