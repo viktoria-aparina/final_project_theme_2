@@ -1,4 +1,4 @@
-package api.clients;
+package org.pm.api.clients;
 
 import io.restassured.specification.RequestSpecification;
 

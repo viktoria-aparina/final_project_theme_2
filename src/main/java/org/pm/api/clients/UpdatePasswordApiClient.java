@@ -1,6 +1,6 @@
-package api.clients;
+package org.pm.api.clients;
 
-import api.dto.UpdatePasswordRequest;
+import org.pm.api.dto.UpdatePasswordRequest;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
@@ -8,7 +8,7 @@ import static io.restassured.RestAssured.given;
 public class UpdatePasswordApiClient extends BaseApiClients {
 
   public Response postUpdatePassword(UpdatePasswordRequest updatePasswordRequest, String token) {
-    return updatePassword("/api/user/updatepassword", updatePasswordRequest, token);
+    return updatePassword("/org/pm/api/user/updatepassword", updatePasswordRequest, token);
   }
 
   private Response updatePassword(String uri, Object body, String token) {

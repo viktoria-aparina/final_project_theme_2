@@ -1,4 +1,4 @@
-package api.dto.response;
+package org.pm.api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegistrationResponse {
+
+public class LoginResponse {
 
   private String token;
   private String pmToken;
