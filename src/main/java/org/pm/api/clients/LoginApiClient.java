@@ -1,6 +1,6 @@
-package api.clients;
+package org.pm.api.clients;
 
-import api.dto.LoginRequest;
+import org.pm.api.dto.LoginRequest;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
@@ -8,7 +8,7 @@ import static io.restassured.RestAssured.given;
 public class LoginApiClient extends BaseApiClients {
 
   public Response postLogin(LoginRequest loginRequest) {
-    return login("/api/v2/routinglogin", loginRequest);
+    return login("/org/pm/api/v2/routinglogin", loginRequest);
   }
 
   private Response login(String uri, Object body) {

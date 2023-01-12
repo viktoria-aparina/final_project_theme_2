@@ -1,7 +1,7 @@
-package api.providers;
+package org.pm.api.providers;
 
-import api.dto.LoginRequest;
-import api.dto.UserRegistrationRequest;
+import org.pm.api.dto.LoginRequest;
+import org.pm.api.dto.UserRegistrationRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class UserRegistrationProvider {
