@@ -1,10 +1,10 @@
 package org.pm.api;
 
-import api.clients.LoginApiClient;
-import api.dto.LoginRequest;
-import api.dto.UserRegistrationRequest;
-import api.dto.response.RegistrationResponse;
-import api.providers.UserRegistrationProvider;
+import org.pm.api.clients.LoginApiClient;
+import org.pm.api.dto.LoginRequest;
+import org.pm.api.dto.UserRegistrationRequest;
+import org.pm.api.dto.response.RegistrationResponse;
+import org.pm.api.providers.UserRegistrationProvider;
 import io.qameta.allure.Description;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;

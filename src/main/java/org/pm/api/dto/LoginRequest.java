@@ -1,4 +1,4 @@
-package api.dto;
+package org.pm.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

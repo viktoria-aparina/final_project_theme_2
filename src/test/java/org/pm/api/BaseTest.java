@@ -1,7 +1,7 @@
 package org.pm.api;
 
-import api.clients.RegistrationApiClient;
-import api.dto.response.RegistrationResponse;
+import org.pm.api.clients.RegistrationApiClient;
+import org.pm.api.dto.response.RegistrationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

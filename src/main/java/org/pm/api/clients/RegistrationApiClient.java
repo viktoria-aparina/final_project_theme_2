@@ -1,7 +1,7 @@
-package api.clients;
+package org.pm.api.clients;
 
-import api.dto.UserRegistrationRequest;
-import api.dto.response.RegistrationResponse;
+import org.pm.api.dto.UserRegistrationRequest;
+import org.pm.api.dto.response.RegistrationResponse;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 public class RegistrationApiClient extends BaseApiClients {
 
   public RegistrationResponse postUser(UserRegistrationRequest newUser, int httpStatusCode) {
-    Response response = postRegistration("/api/v3/registration/byform", newUser);
+    Response response = postRegistration("/org/pm/api/v3/registration/byform", newUser);
     return response.then()
         .statusCode(httpStatusCode)
         .extract()
