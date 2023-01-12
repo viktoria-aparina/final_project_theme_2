@@ -18,37 +18,38 @@ import static org.openqa.selenium.By.xpath;
 @Log4j2
 public class SportPage extends BasePage {
 
-    ElementsCollection events = $$(xpath("//div[@data-id='event-card-container-event']"));
+  ElementsCollection events = $$(xpath("//div[@data-id='event-card-container-event']"));
 
-    @Override
-    public boolean isPageOpened() {
-        try {
-            $(id("line-holder")).shouldBe(visible);
-            log.info("The SportPage was opened successfully");
-            return true;
-        } catch (TimeoutException exception) {
-            log.error("The SportPage wasn't open because of error {}", exception.getCause());
-            return false;
-        }
+  @Override
+  public boolean isPageOpened() {
+    try {
+      $(id("line-holder")).shouldBe(visible);
+      log.info("The SportPage was opened successfully");
+      return true;
+    } catch (TimeoutException exception) {
+      log.error("The SportPage wasn't open because of error {}", exception.getCause());
+      return false;
+    }
+  }
+
+  public ArrayList<Double> selectEventAndOutcome(Map<Bet, Integer> parameterCoefficients) {
+    ArrayList<Double> coefficientsFromSportPage = new ArrayList<>();
+    for (Map.Entry<Bet, Integer> entry : parameterCoefficients.entrySet()) {
+      SelenideElement coefficient =
+          events.get(entry.getValue()).find(xpath(entry.getKey().getLocator()));
+      coefficient.shouldBe(enabled).click();
+      coefficientsFromSportPage.add(Double.valueOf(coefficient.getText()));
     }
 
-    public ArrayList<Double> selectEventAndOutcome(Map<Bet, Integer> parameterCoefficients) {
-        ArrayList<Double> coefficientsFromSportPage = new ArrayList<>();
-        for (Map.Entry<Bet, Integer> entry : parameterCoefficients.entrySet()) {
-                SelenideElement coefficient = events.get(entry.getValue()).find(xpath(entry.getKey().getLocator()));
-                coefficient.shouldBe(enabled).click();
-                coefficientsFromSportPage.add(Double.valueOf(coefficient.getText()));
-            }
+    log.info("The bet was chosen successfully");
+    $(xpath("//div[@data-id='betslip-outcome-block']")).shouldBe(visible);
+    return coefficientsFromSportPage;
+  }
 
-        log.info("The bet was chosen successfully");
-        $(xpath("//div[@data-id='betslip-outcome-block']")).shouldBe(visible);
-        return coefficientsFromSportPage;
-    }
-
-    public double getOddFromOutcome(int eventIndex, Bet bet) {
-        String odd = $$(xpath("//div[@data-id='event-card-container-event']"))
-                        .get(eventIndex)
-                        .find(xpath(bet.getLocator())).shouldBe(visible).getText();
-        return Double.parseDouble(odd);
-    }
+  public double getOddFromOutcome(int eventIndex, Bet bet) {
+    String odd = $$(xpath("//div[@data-id='event-card-container-event']"))
+        .get(eventIndex)
+        .find(xpath(bet.getLocator())).shouldBe(visible).getText();
+    return Double.parseDouble(odd);
+  }
 }

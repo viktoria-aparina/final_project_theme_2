@@ -7,26 +7,24 @@ import api.dto.response.RegistrationResponse;
 import api.providers.UserRegistrationProvider;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import static org.apache.http.HttpStatus.SC_OK;
 
 public class UpdatePasswordTest extends BaseTest {
+  UpdatePasswordApiClient updatePasswordApiClient = new UpdatePasswordApiClient();
+  @Test
+  public void updatePasswordTest() {
+    UserRegistrationRequest newUser = new UserRegistrationProvider().getNewUser();
+    RegistrationResponse registrationResponse = registrationApiClient.postUser(newUser, SC_OK);
 
-    UpdatePasswordApiClient updatePasswordApiClient = new UpdatePasswordApiClient();
+    String generatedString = RandomStringUtils.randomNumeric(3);
+    String newPassword = "Qwerty!" + generatedString;
 
-    @Test
-    public void updatePasswordTest() {
-        UserRegistrationRequest newUser = new UserRegistrationProvider().getNewUser();
-        RegistrationResponse registrationResponse = registrationApiClient.postUser(newUser, HttpStatus.SC_OK);
-
-        String generatedString = RandomStringUtils.randomNumeric(3);
-        String newPassword = "Qwerty!" + generatedString;
-
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(newUser.getPassword(), newPassword);
-        Response actualResponse = updatePasswordApiClient
-                .postUpdatePassword(updatePasswordRequest, registrationResponse.getToken());
-        assertEquals(actualResponse.then().extract().statusCode(), HttpStatus.SC_OK);
-    }
+    UpdatePasswordRequest updatePasswordRequest =
+        new UpdatePasswordRequest(newUser.getPassword(), newPassword);
+    Response actualResponse = updatePasswordApiClient
+        .postUpdatePassword(updatePasswordRequest, registrationResponse.getToken());
+    assertStatusCode(actualResponse.then().extract().statusCode(), SC_OK);
+  }
 }

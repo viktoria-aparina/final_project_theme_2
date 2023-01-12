@@ -7,14 +7,14 @@ import static io.restassured.http.ContentType.JSON;
 
 public class BaseApiClients {
 
-    RequestSpecification rqSpec;
+  RequestSpecification rqSpec;
 
-    public BaseApiClients() {
-        rqSpec = given()
-                .contentType(JSON)
-                .accept(JSON)
-                .baseUri("https://pm.ua")
-                .header("User-Agent", "ParimatchTechAcademy/89870edc1aaea008bd3a519c")
-                .log().ifValidationFails();
-    }
+  public BaseApiClients() {
+    rqSpec = given()
+        .contentType(JSON)
+        .accept(JSON)
+        .baseUri("https://pm.ua")
+        .header("User-Agent", "ParimatchTechAcademy/89870edc1aaea008bd3a519c")
+        .log().ifValidationFails();
+  }
 }
